@@ -7,10 +7,20 @@ import {
   Platform,
 } from "react-native";
 
-const MealItem = ({ title, imageUrl, duration, complexity, affordability }) => {
+import MealDetails from "./MealDetails";
+
+const MealItem = ({
+  title,
+  imageUrl,
+  duration,
+  complexity,
+  affordability,
+  onPress,
+}) => {
   return (
     <View style={styles.mealItem}>
       <Pressable
+        onPress={onPress}
         android_ripple={{ color: "#efefef" }}
         style={({ pressed }) => pressed && styles.pressedButton}
       >
@@ -19,13 +29,11 @@ const MealItem = ({ title, imageUrl, duration, complexity, affordability }) => {
             <Image source={{ uri: imageUrl }} style={styles.image} />
             <Text style={styles.title}>{title}</Text>
           </View>
-          <View style={styles.details}>
-            <Text style={styles.detailItem}>{duration}m</Text>
-            <Text style={styles.detailItem}>{complexity?.toUpperCase()}</Text>
-            <Text style={styles.detailItem}>
-              {affordability?.toUpperCase()}
-            </Text>
-          </View>
+          <MealDetails
+            duration={duration}
+            complexity={complexity}
+            affordability={affordability}
+          />
         </View>
       </Pressable>
     </View>
@@ -60,17 +68,6 @@ const styles = StyleSheet.create({
     margin: 8,
   },
 
-  details: {
-    flexDirection: "row",
-    alignContent: "center",
-    justifyContent: "center",
-    padding: 8,
-  },
-
-  detailItem: {
-    marginHorizontal: 4,
-    fontSize: 12,
-  },
   pressedButton: {
     opacity: 0.5,
   },
