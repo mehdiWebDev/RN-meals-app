@@ -6,19 +6,33 @@ import List from "../components/MealDetail/List";
 import { useLayoutEffect } from "react";
 import IconButton from "../components/IconButton";
 
+import { useContext } from "react";
+import { FavoritesContext } from "../store/context/favorites-context";
+
 const MealDetailsScreen = ({ route, navigation }) => {
+  const { addFavorite, removeFavorite, isFavorite } =
+    useContext(FavoritesContext);
   const mealId = route.params.mealId;
+  const isFavoriteMeal = isFavorite(mealId);
   const selectedMeal = MEALS.find((meal) => meal.id === mealId);
   const handleSave = () => {
-    console.log("Save");
+    if (isFavorite(mealId)) {
+      removeFavorite(mealId);
+    } else {
+      addFavorite(mealId);
+    }
   };
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <IconButton icon="star" color="white" onPress={handleSave} />
+        <IconButton
+          icon={isFavoriteMeal ? "star" : "star-outline"}
+          color="white"
+          onPress={handleSave}
+        />
       ),
     });
-  }, [navigation]);
+  }, [navigation, handleSave, isFavoriteMeal]);
   return (
     <ScrollView style={styles.rootContainer}>
       <Image style={styles.image} source={{ uri: selectedMeal.imageUrl }} />
